@@ -26,7 +26,7 @@ class TwitchApiService(private val httpClient: HttpClient) {
     /// Gets Access and Refresh Tokens on Twitch
     suspend fun getTokens(authorizationCode: String): OAuthTokensResponse? {
         // TODO("Get Tokens from Twitch")
-        return try{
+        return try {
             val tokens = httpClient.post<OAuthTokensResponse>(tokenUrl) {
                 parameter("client_id", clientID)
                 parameter("client_secret", clientSecret)
@@ -36,7 +36,7 @@ class TwitchApiService(private val httpClient: HttpClient) {
             }
             Log.d(TAG, "Access Token: ${tokens.accessToken}. Refresh Token: ${tokens.refreshToken}")
             tokens
-        }catch (e: ClientRequestException){
+        } catch (e: ClientRequestException) {
             validateStatusCode(e)
             null
         }
@@ -53,7 +53,7 @@ class TwitchApiService(private val httpClient: HttpClient) {
             }
             Log.d(TAG, "New Access Token: ${newToken.accessToken}. New Refresh Token: ${newToken.refreshToken}")
             newToken
-        }catch (e: ClientRequestException){
+        } catch (e: ClientRequestException) {
             validateStatusCode(e)
             null
         }
@@ -64,7 +64,7 @@ class TwitchApiService(private val httpClient: HttpClient) {
     suspend fun getStreams(cursor: String? = null): StreamsResponse? {
         // TODO("Get Streams from Twitch")
         try {
-            if(cursor.isNullOrEmpty()){
+            if (cursor.isNullOrEmpty()) {
                 val streams = httpClient.get<StreamsResponse>(streamsUrl) {
                     headers {
                         append("Client-Id", clientID)
@@ -72,7 +72,7 @@ class TwitchApiService(private val httpClient: HttpClient) {
                 }
                 Log.d(TAG, "Streams: ${streams.data?.size}")
                 return streams
-            // TODO("Support Pagination")
+                // TODO("Support Pagination")
             } else {
                 val streamsPagination = httpClient.get<StreamsResponse>(streamsUrl) {
                     parameter("first", 20)
@@ -84,7 +84,7 @@ class TwitchApiService(private val httpClient: HttpClient) {
                 Log.d(TAG, "Cursor Streams: ${streamsPagination.data?.size}")
                 return streamsPagination
             }
-        }catch (e: ClientRequestException){
+        } catch (e: ClientRequestException) {
             validateStatusCode(e)
             return null
         }

@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import edu.uoc.pac3.R
 import edu.uoc.pac3.data.SessionManager
 import edu.uoc.pac3.data.TwitchApiService
@@ -77,22 +78,25 @@ class OAuthActivity : AppCompatActivity() {
         // Load OAuth Uri
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(uri.toString())
+
     }
 
     // Call this method after obtaining the authorization code
     // on the WebView to obtain the tokens
     private fun onAuthorizationCodeRetrieved(authorizationCode: String) {
+        webView.visibility = View.GONE;
         // Show Loading Indicator
         progressBar.visibility = View.VISIBLE
         // TODO: Create Twitch Service
         val twitchService = TwitchApiService(createHttpClient(this))
         // TODO: Get Tokens from Twitch
-        runBlocking {
+        lifecycleScope.launch {
             val response = twitchService.getTokens(authorizationCode)
             if (response != null) {
                 // TODO: Save access token and refresh token using the SessionManager class
                 SessionManager(applicationContext).saveAccessToken(response.accessToken)
                 SessionManager(applicationContext).saveRefreshToken(response.refreshToken.toString())
+                finish()
                 startActivity(Intent(applicationContext, StreamsActivity::class.java))
             }
         }

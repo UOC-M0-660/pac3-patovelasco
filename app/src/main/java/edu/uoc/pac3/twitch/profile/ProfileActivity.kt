@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import edu.uoc.pac3.R
 import edu.uoc.pac3.data.SessionManager
@@ -13,7 +14,7 @@ import edu.uoc.pac3.data.TwitchApiService
 import edu.uoc.pac3.data.network.Network
 import edu.uoc.pac3.oauth.LoginActivity
 import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -49,12 +50,12 @@ class ProfileActivity : AppCompatActivity() {
     //fun to call getUser
     private fun callGetUser() {
         val twitchService = TwitchApiService(Network.createHttpClient(this))
-        runBlocking {
+        lifecycleScope.launch {
             val response = twitchService.getUser()
             if (response != null) {
                 Glide.with(applicationContext)
-                    .load(response.profileImageUrl)
-                    .into(imageProfile)
+                        .load(response.profileImageUrl)
+                        .into(imageProfile)
                 views.text = response.viewCount
                 username.text = response.userName
                 userDescription.text = response.description
@@ -65,7 +66,7 @@ class ProfileActivity : AppCompatActivity() {
     //fun to Update Description
     private fun callUpdateDescription() {
         val twitchService = TwitchApiService(Network.createHttpClient(this))
-        runBlocking {
+        lifecycleScope.launch {
             val response = twitchService.updateUserDescription(userDescription.text.toString())
             if (response != null) {
                 Toast.makeText(applicationContext, "User description updated", Toast.LENGTH_LONG).show()

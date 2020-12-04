@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.uoc.pac3.R
@@ -15,7 +16,7 @@ import edu.uoc.pac3.data.network.Network
 import edu.uoc.pac3.data.oauth.UnauthorizedException
 import edu.uoc.pac3.oauth.LoginActivity
 import edu.uoc.pac3.twitch.profile.ProfileActivity
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 
 class StreamsActivity : AppCompatActivity() {
@@ -35,10 +36,10 @@ class StreamsActivity : AppCompatActivity() {
 
     private fun callGetStreams(cursor: String? = null) {
         val twitchService = TwitchApiService(Network.createHttpClient(this))
-        runBlocking {
+        lifecycleScope.launch {
             try {
                 getAndSetStreams(twitchService, cursor)
-            }catch (e: UnauthorizedException) {
+            } catch (e: UnauthorizedException) {
                 SessionManager(applicationContext).clearAccessToken()
                 val refreshToken = SessionManager(applicationContext).getRefreshToken()
                 try {
@@ -50,7 +51,7 @@ class StreamsActivity : AppCompatActivity() {
                         SessionManager(applicationContext).saveRefreshToken(response.refreshToken.toString())
                         getAndSetStreams(twitchService, cursor)
                     }
-                }catch (e: UnauthorizedException) {
+                } catch (e: UnauthorizedException) {
                     Log.i(TAG, "Redireccionando a Login")
                     startActivity(Intent(applicationContext, LoginActivity::class.java))
                 }

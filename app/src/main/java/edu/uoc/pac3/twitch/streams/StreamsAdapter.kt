@@ -11,7 +11,7 @@ import edu.uoc.pac3.R
 import edu.uoc.pac3.data.streams.Stream
 
 
-class StreamsAdapter(private var streams: List<Stream>): RecyclerView.Adapter<StreamsAdapter.ViewHolder>() {
+class StreamsAdapter(private var streams: List<Stream>) : RecyclerView.Adapter<StreamsAdapter.ViewHolder>() {
 
     private fun getStream(position: Int): Stream {
         return streams[position]
@@ -24,7 +24,7 @@ class StreamsAdapter(private var streams: List<Stream>): RecyclerView.Adapter<St
     }
 
     // Creates View Holder for re-use
-   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         // Inflate the custom layout
@@ -39,7 +39,7 @@ class StreamsAdapter(private var streams: List<Stream>): RecyclerView.Adapter<St
         val stream = getStream(position)
         holder.titleView.text = stream.title
         holder.userView.text = stream.userName
-        var url= stream.thumbnailUrl?.replace("{width}", "200")?.replace("{height}", "100")
+        var url = stream.thumbnailUrl?.replace("{width}", "200")?.replace("{height}", "100")
         Glide.with(holder.itemView)
                 .load(url)
                 .into(holder.thumbnailView)
@@ -54,6 +54,6 @@ class StreamsAdapter(private var streams: List<Stream>): RecyclerView.Adapter<St
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleView: TextView = view.findViewById(R.id.title)
         val userView: TextView = view.findViewById(R.id.userName)
-        val thumbnailView : ImageView = view.findViewById(R.id.thumbnail)
+        val thumbnailView: ImageView = view.findViewById(R.id.thumbnail)
     }
 }
