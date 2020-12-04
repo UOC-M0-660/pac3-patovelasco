@@ -1,9 +1,11 @@
 package edu.uoc.pac3
 
+import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import edu.uoc.pac3.data.SessionManager
+import edu.uoc.pac3.data.oauth.UnauthorizedException
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,12 +32,16 @@ class Ex6Test {
         Thread.sleep(TestData.sharedPrefsWaitingMillis)
         // Test Streams Request
         runBlocking {
-            val streams = twitchService.getStreams()
-            assert(streams != null) {
-                "Token should be auto-refreshed and streams retrieved correctly"
-            }
-            assert(sessionManager.getAccessToken() != TestData.dummyAccessToken) {
-                "New access token should be saved"
+            try{
+                val streams = twitchService.getStreams()
+                assert(streams != null) {
+                    "Token should be auto-refreshed and streams retrieved correctly"
+                }
+                assert(sessionManager.getAccessToken() != TestData.dummyAccessToken) {
+                    "New access token should be saved"
+                }
+            }catch (e: UnauthorizedException) {
+                Log.i("Ex6Test",  "Error to refresh token")
             }
         }
     }

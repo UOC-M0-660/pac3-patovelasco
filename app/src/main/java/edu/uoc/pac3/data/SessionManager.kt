@@ -1,41 +1,46 @@
 package edu.uoc.pac3.data
 
 import android.content.Context
+import android.content.SharedPreferences
+import edu.uoc.pac3.data.oauth.OAuthConstants.sharedAccessToken
+import edu.uoc.pac3.data.oauth.OAuthConstants.sharedFileName
+import edu.uoc.pac3.data.oauth.OAuthConstants.sharedNoDataFound
+import edu.uoc.pac3.data.oauth.OAuthConstants.sharedRefreshToken
+
 
 /**
  * Created by alex on 06/09/2020.
  */
 
 class SessionManager(context: Context) {
+    private val sharedPref: SharedPreferences = context.getSharedPreferences(sharedFileName, 0)
 
     fun isUserAvailable(): Boolean {
-        // TODO: Implement
-        return false
+        return !getAccessToken().isNullOrEmpty()
     }
 
     fun getAccessToken(): String? {
-        // TODO: Implement
-        return null
+        return sharedPref.getString(sharedAccessToken, sharedNoDataFound)
     }
 
     fun saveAccessToken(accessToken: String) {
-        TODO("Save Access Token")
+        sharedPref.edit().putString(sharedAccessToken, accessToken).apply()
     }
 
     fun clearAccessToken() {
-        TODO("Clear Access Token")
+        sharedPref.edit().remove(sharedAccessToken).apply()
     }
 
     fun getRefreshToken(): String? {
-        TODO("Get Refresh Token")
+        return sharedPref.getString(sharedRefreshToken, sharedNoDataFound)
     }
 
     fun saveRefreshToken(refreshToken: String) {
-        TODO("Save Refresh Token")
+        sharedPref.edit().putString(sharedRefreshToken, refreshToken).apply()
     }
 
     fun clearRefreshToken() {
-        TODO("Clear Refresh Token")
+        sharedPref.edit().remove(sharedRefreshToken).apply()
     }
 
 }

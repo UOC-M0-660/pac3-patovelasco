@@ -1,10 +1,13 @@
 package edu.uoc.pac3.data.oauth
 
+import kotlinx.serialization.*
+
 /**
  * Created by alex on 07/09/2020.
  */
 
+@Serializable
 data class OAuthTokensResponse(
-    val accessToken: String,
-    val refreshToken: String? = null,
+        @SerialName("access_token") val accessToken: String,
+        @SerialName("refresh_token") val refreshToken: String? = null,
 )

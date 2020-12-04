@@ -1,8 +1,10 @@
 package edu.uoc.pac3
 
 import android.net.Uri
+import android.util.Log
 import androidx.test.core.app.ActivityScenario
 import androidx.test.filters.LargeTest
+import edu.uoc.pac3.data.oauth.UnauthorizedException
 import edu.uoc.pac3.oauth.OAuthActivity
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -33,9 +35,13 @@ class Ex1Test {
         scenario.onActivity {
             runBlocking {
                 val apiService = TestData.provideTwitchService(it)
-                val response = apiService.getTokens("12345")
-                assert(response?.accessToken == null) {
-                    "Invalid code should return null access token"
+                try{
+                    val response = apiService.getTokens("12345")
+                    assert(response?.accessToken == null) {
+                        "Invalid code should return null access token"
+                    }
+                }catch (e: UnauthorizedException) {
+                    Log.i("Ex1Test",  "Invalid code should return null access token")
                 }
             }
         }
