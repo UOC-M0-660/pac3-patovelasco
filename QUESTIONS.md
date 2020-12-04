@@ -5,7 +5,7 @@
 #### Explica el ciclo de vida de una Activity.
 
 ##### ¿Por qué vinculamos las tareas de red a los componentes UI de la aplicación?
-Para poder trabajar con multitareas ya que esto permite que una aplicación realice acciones en segundo plano, mientras el usuario puede seguir utilizando la aplicación, en tareas de larga duración nos permitirá no bloquear la interfaz de usuario de la aplicación.
+Para poder trabajar con multitareas ya que esto permite que una aplicación realice acciones en segundo plano, mientras el usuario puede seguir utilizando la aplicación y también para que cuando una actividad sea finalizada se cancelen las tareas de red y evitar que se siga realizando una petición de red
 
 ##### ¿Qué pasaría si intentamos actualizar la recyclerview con nuevos streams después de que el usuario haya cerrado la aplicación?
 No es posible puesto que al cerrar la aplicación se invoca al método onDestroy lo que ocasiona liberar recursos, quitando de la vista los elementos, por lo que se produciría un error.
